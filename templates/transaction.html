@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Transactions</title>
+    <meta http-equiv="refresh" content="5;url=http://192.168.103.76:5000/transaction.html" />
+    <style>
+        .post {
+            padding: 10px;
+            margin: 5px;
+        }
+
+        nav a {
+            font-size: 3em;
+            margin-left: 50px;
+            text-decoration: none;
+        }
+        table{
+            width : 100vh;
+         }
+         th, td {
+            border-style: dotted;
+        }
+    </style>
+</head>
+<body>
+    <hr>
+    <div class="content">
+    <h1>Live data of Transaction</h1><hr>
+            <table>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Ar</th>
+                </tr>
+                {% for data in posts %}
+                <tr>
+                    <td>{{ data['id'] }}</td>
+                    <td>{{ data['name'] }}</td>
+                    <td>{{ data['ar'] }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+    </div>
+</body>
+</html>
