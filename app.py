@@ -18,14 +18,13 @@ def index():
     conn = get_db_connection()
     posts = conn.execute('SELECT * FROM userdata').fetchall()
     conn.close()
-    return render_template('transaction.html', posts=posts)
+    return render_template('transaction.html', posts=posts, host = "5;url=http://127.0.0.1:5000/transaction.html")
 
 @app.route('/transaction.html', methods=['POST'])
 def json():
     dat = request.get_json()
-    print(id)
-    print(dat['id'])
-    print(dat['name'])
+    print(dat['sender'])
+    print(dat['reciever'])
     print(dat['ar'])
     con.update_transact_data(self=con, data = dat)
     return render_template('transaction.html', posts=dat)
