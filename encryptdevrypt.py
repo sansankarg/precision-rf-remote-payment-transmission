@@ -24,9 +24,9 @@ def aes_decrypt(key, iv, ciphertext):
 cipher_key = bytes([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15])
 cipher_iv = bytes([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15])
 
-plaintext = "6381998286822070913110000"
-# ciphertext = aes_encrypt(cipher_key, cipher_iv, plaintext)
-# print(ciphertext)
+plaintext = "82207091316381998286100000"
+ciphertext = aes_encrypt(cipher_key, cipher_iv, plaintext)
+print(ciphertext)
 #
 # decrypted_text = aes_decrypt(cipher_key, cipher_iv, ciphertext)
 # print(decrypted_text)

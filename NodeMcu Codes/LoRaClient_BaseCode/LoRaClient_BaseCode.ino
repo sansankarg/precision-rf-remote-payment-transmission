@@ -1,84 +1,125 @@
-#include <Arduino.h>
-#include <ESP8266WiFi.h>
-#include "Base64.h"
+/*
+ 
+The transmitter code arduino for sending data packet lora radio module 433MHz  ra02 lora
+ 
+*/
+ 
+#include <SPI.h> 
+#include <LoRa.h>
+#include <Keypad.h>
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
 
-uint8_t cipher_key[16] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
-uint8_t cipher_iv[16] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
+LiquidCrystal_I2C lcd(0x3F, 16, 2);
 
-void setup()
-{
-  Serial.begin(115200);
-  Serial.println("Encrypting...");  
-  String encdata = encrypt("quick brown fox jumps over the lazy dog");
+const byte ROWS = 4; // Four rows
+const byte COLS = 4; // Four columns
 
-  Serial.println("encrypted:");  
-  Serial.println(encdata);  
+char keys[ROWS][COLS] = {
+  {'1','2','3','A'},
+  {'4','5','6','B'},
+  {'7','8','9','C'},
+  {'*','0','#','D'}
+};
 
-  String decdata = decrypt(encdata);
+byte rowPins[ROWS] = {31, 33, 35, 37}; // Connect to the row pinouts of the keypad
+byte colPins[COLS] = {39, 41, 43, 45}; // Connect to the column pinouts of the keypad
 
-  Serial.println("decrypted:");  
-  Serial.println(decdata);
+Keypad keypad = Keypad( makeKeymap(keys), rowPins, colPins, ROWS, COLS );
+
+
+int counter = 0;
+String sid1 = ""; // String to store the entered phone number for sid1
+String sid2 = ""; // String to store the entered phone number for sid2
+String ar = ""; 
+ 
+void setup() {
+
+  lcd.init();   // initializing the LCD
+  lcd.backlight(); // Enable or Turn On the backlight 
+ LoRa.setPins(10, 9, 2);//NSS, NRESET, and DIO0 pins can be changed by using LoRa.setPins(ss, reset, dio0).
+  Serial.begin(9600);
+ 
+  while (!Serial);
+ 
+  Serial.println("LoRa Sender");
+ 
+  if (!LoRa.begin(433E6)) {
+ 
+    Serial.println("Starting LoRa failed!");
+ 
+    while (1);
+ 
+  }
+ 
+ 
+ LoRa.crc();
+  lcd.setCursor(0, 0);
+  lcd.print("Press any key to");
+  lcd.setCursor(0, 1);
+  lcd.print("start");
+
+ 
+ 
 }
-
-String encrypt(String plain_data){
-  int i;
-  int len = plain_data.length();
-  int n_blocks = len / 16 + 1;
-  uint8_t n_padding = n_blocks * 16 - len;
-  uint8_t data[n_blocks*16];
-  memcpy(data, plain_data.c_str(), len);
-  for(i = len; i < n_blocks * 16; i++){
-    data[i] = n_padding;
+ 
+void loop() {
+   char key;
+  while (!keypad.getKey()) {
+    delay(100);
   }
   
-  uint8_t key[16], iv[16];
-  memcpy(key, cipher_key, 16);
-  memcpy(iv, cipher_iv, 16);
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Enter sid1:");
 
+  while (sid1.length() < 10) {
+    key = keypad.getKey();
+    if (key >= '0' && key <= '9') {
+      sid1 += key;
+      lcd.setCursor(0, 1);
+      lcd.print(sid1);
+    }
+    delay(100);
+  }
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Enter sid2:");
+  while (sid2.length() < 10) {
+    key = keypad.getKey();
+    if (key >= '0' && key <= '9') {
+      sid2 += key;
+      lcd.setCursor(0, 1);
+      lcd.print(sid2);
+    }
+    delay(100);
+  }
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Enter AR:");
+  while (ar.length() < 5) {
+    key = keypad.getKey();
+    if (key >= '0' && key <= '9') {
+      ar += key;
+      lcd.setCursor(0, 1);
+      lcd.print(ar);
+    }
+    delay(100);
+  }
+  String combinedString = sid1 + sid2 + ar;
+  Serial.println("Combined String: " + combinedString);
+  String payload = combinedString;
+  Serial.println("payload");
+  Serial.print("Sending packet: ");
+  lcd.clear();
+  lcd.print("package sent");
+  Serial.println(counter);
+  LoRa.beginPacket();
+  LoRa.print("payload");
+  Serial.println(counter);
+  LoRa.endPacket();
+  counter++;
 
-  br_aes_big_cbcenc_keys encCtx;
-
-
-  br_aes_big_cbcenc_init(&encCtx, key, 16);
-  br_aes_big_cbcenc_run( &encCtx, iv, data, n_blocks*16 );
-
-
-  len = n_blocks*16;
-  char encoded_data[ base64_enc_len(len) ];
-  base64_encode(encoded_data, (char *)data, len);
-  
-  return String(encoded_data);
-}
-
-
-String decrypt(String encoded_data_str){  
-  int input_len = encoded_data_str.length();
-  char *encoded_data = const_cast<char*>(encoded_data_str.c_str());
-  int len = base64_dec_len(encoded_data, input_len);
-  uint8_t data[ len ];
-  base64_decode((char *)data, encoded_data, input_len);
-  
-  uint8_t key[16], iv[16];
-  memcpy(key, cipher_key, 16);
-  memcpy(iv, cipher_iv, 16);
-
-  int n_blocks = len / 16;
-
-  br_aes_big_cbcdec_keys decCtx;
-
-  br_aes_big_cbcdec_init(&decCtx, key, 16);
-  br_aes_big_cbcdec_run( &decCtx, iv, data, n_blocks*16 );
-
-
-  uint8_t n_padding = data[n_blocks*16-1];
-  len = n_blocks*16 - n_padding;
-  char plain_data[len + 1];
-  memcpy(plain_data, data, len);
-  plain_data[len] = '\0';
-
-  return String(plain_data);
-}
-
-void loop()
-{ 
+  delay(2000);
+ 
 }
