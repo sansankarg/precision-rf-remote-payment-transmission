@@ -1,3 +1,3 @@
 from update_server import sendToServer
 
-sendToServer("R5hRuVK4t8r+/bSRdBbSGYLgLDEwqz6YOCaWwtFXCfU=")
+sendToServer("6381998286267875645830")

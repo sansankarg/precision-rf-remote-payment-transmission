@@ -5,42 +5,86 @@
     <title>Transactions</title>
     <meta http-equiv="refresh" content="{{ host }}" />
     <style>
-        .post {
-            padding: 10px;
-            margin: 5px;
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e9ecef;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
-
+        .content {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 800px;
+            margin: auto;
+        }
+        h1 {
+            text-align: center;
+            color: #343a40;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px dotted #ced4da;
+            text-align: left;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        hr {
+            border: none;
+            border-top: 1px solid #ced4da;
+            margin: 20px 0;
+        }
         nav a {
-            font-size: 3em;
+            font-size: 1.5em;
             margin-left: 50px;
             text-decoration: none;
+            color: #007bff;
         }
-        table{
-            width : 100vh;
-         }
-         th, td {
-            border-style: dotted;
+        nav a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
-    <hr>
     <div class="content">
-    <h1>Live data of Transaction</h1><hr>
-            <table>
-                <tr>
-                    <th>Id</th>
-                    <th>Name</th>
-                    <th>Ar</th>
-                </tr>
-                {% for data in posts %}
-                <tr>
-                    <td>{{ data['id'] }}</td>
-                    <td>{{ data['name'] }}</td>
-                    <td>{{ data['ar'] }}</td>
-                </tr>
-                {% endfor %}
-            </table>
+        <h1>Users data</h1><hr>
+        <table>
+            <tr>
+                <th>Sid</th>
+                <th>Rid</th>
+                <th>First name</th>
+                <th>Last name</th>
+                <th>Age</th>
+                <th>Ar</th>
+            </tr>
+            {% for data in posts %}
+            <tr>
+                <td>{{ data['sid'] }}</td>
+                <td>{{ data['rid'] }}</td>
+                <td>{{ data['fname'] }}</td>
+                <td>{{ data['lname'] }}</td>
+                <td>{{ data['age'] }}</td>
+                <td>{{ data['ar'] }}</td>
+            </tr>
+            {% endfor %}
+        </table>
     </div>
 </body>
 </html>

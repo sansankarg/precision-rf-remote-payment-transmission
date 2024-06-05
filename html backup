@@ -1,0 +1,39 @@
+transaction
+
+<h1>Live Data of Transactions</h1><hr>
+        <table>
+            <tr>
+                <th>Id</th>
+                <th>First name</th>
+                <th>Last name</th>
+                <th>Ar</th>
+            </tr>
+            {% for data in posts %}
+            <tr>
+                <td>{{ data['rid'] }}</td>
+                <td>{{ data['fname'] }}</td>
+                <td>{{ data['lname'] }}</td>
+                <td>{{ data['ar'] }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+
+creac acc
+
+
+<form action="" method="post">
+        <h1>Create Bank Account</h1>
+        <hr>
+        <label for="fname">First name:</label>
+        <input type="text" id="fname" name="fname" placeholder="First name">
+        <label for="lname">Last name:</label>
+        <input type="text" id="lname" name="lname" placeholder="Last name">
+        <label for="sid">Social ID:</label>
+        <input type="text" id="sid" name="sid" placeholder="Social ID">
+        <label for="rid">Reference ID:</label>
+        <input type="text" id="rid" name="rid" placeholder="Reference ID">
+        <label for="age">Age:</label>
+        <input type="text" id="age" name="age" placeholder="Age">
+        <button type="submit">Submit</button>
+        <p>{{ msg }}</p>
+    </form>

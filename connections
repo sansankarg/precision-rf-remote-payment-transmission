@@ -1,0 +1,31 @@
+RA-02 to NodeMCU (ESP8266)
++3.3V ----------------- +3.3V
+ GND ------------------ GND
+ NSS ------------------ D8
+MOSI ------------------ D7
+MISO ------------------ D6
+ SCK ------------------ D5
+ RST ------------------ D0
+
+NodeMCU to I2C Keypad
+ D3 (SCL) ------------- SCL
+ D4 (SDA) ------------- SDA
+
+I2C Keypad to I2C LCD
+ VCC ------------------ VCC
+ GND ------------------ GND
+ SDA ------------------ SDA
+ SCL ------------------ SCL
+
+Arduino Uno to RA-02
++3.3V ----------------- +3.3V
+ GND ------------------ GND
+ D9 (RST) ------------- RST
+D10 (NSS) ------------- NSS
+D11 (MOSI) ------------ MOSI
+D12 (MISO) ------------ MISO
+D13 (SCK) ------------- SCK
+ D2 (DIO0) ------------ DIO0
+
+Arduino Uno to Raspberry Pi (via USB)
+[Arduino Uno USB] ----- [Raspberry Pi USB]

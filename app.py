@@ -16,9 +16,16 @@ def main():
 @app.route('/transaction.html')
 def index():
     conn = get_db_connection()
-    posts = conn.execute('SELECT * FROM userdata').fetchall()
+    posts = conn.execute('SELECT * FROM userbank_details').fetchall()
     conn.close()
     return render_template('transaction.html', posts=posts, host = "5;url=http://127.0.0.1:5000/transaction.html")
+
+@app.route('/live_transactions.html')
+def livedata():
+    conn = get_db_connection()
+    posts = conn.execute('SELECT * FROM transactions_data').fetchall()
+    conn.close()
+    return render_template('live_transactions.html', posts=posts, host = "5;url=http://127.0.0.1:5000/live_transactions.html")
 
 @app.route('/transaction.html', methods=['POST'])
 def json():
@@ -33,9 +40,12 @@ def json():
 @app.route('/creacc.html', methods=['GET', 'POST'])
 def home():
     if request.method == 'POST':
-        id = request.form.get('id')
-        name = request.form.get('name')
-        load = {'id' : id, 'name' : name}
+        sid = request.form.get('sid')
+        rid = request.form.get('rid')
+        fname = request.form.get('fname')
+        lname = request.form.get('lname')
+        age = request.form.get('age')
+        load = {'sid' : rid, 'rid' : rid, 'fname' : fname, 'lname' : lname, 'age' : age}
         if con.update_new_account(self=con, data=load):
             return render_template('creacc.html', msg = "New Account Created")
         else:
